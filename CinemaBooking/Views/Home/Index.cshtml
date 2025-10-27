@@ -1,0 +1,46 @@
+﻿@model SessionListViewModel
+
+@{
+    ViewData["Title"] = "Доступні Сеанси";
+}
+
+<div class="text-center">
+    <h2 class="display-4">@ViewData["Title"]</h2>
+    <p class="lead">Оберіть фільм, який вас цікавить</p>
+</div>
+
+<hr />
+
+<div class="row row-cols-1 row-cols-md-3 g-4 mb-4">
+    @foreach (var session in Model.MovieSessions)
+    {
+        <div class="col">
+            <div class="card session-card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">@session.Title</h5>
+                    <p class="card-text">
+                        <strong>Жанр:</strong> @session.Genre <br />
+                        <strong>Зал:</strong> @session.Hall
+                    </p>
+                    <p class="card-text">
+                        <small class="text-muted">Час: @session.SessionTime.ToString("g")</small>
+                    </p>
+                </div>
+                <div class="card-footer text-end">
+                    <h5 class="text-success mb-0">
+                        @session.Price.ToString("c", System.Globalization.CultureInfo.GetCultureInfo("uk-UA"))
+                    </h5>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div page-model="@Model.PagingInfo"
+     page-action="Index"
+     page-classes-enabled="true"
+     page-class="btn"
+     page-class-normal="btn-outline-dark"
+     page-class-selected="btn-primary"
+     class="d-flex justify-content-center">
+</div>
