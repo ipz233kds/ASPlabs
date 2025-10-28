@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using CinemaBooking.Models.ViewModels;
+using System.Collections.Generic;
 
 namespace CinemaBooking.Infrastructure
 {
@@ -22,8 +23,10 @@ namespace CinemaBooking.Infrastructure
         public ViewContext? ViewContext { get; set; }
 
         public PagingInfo PageModel { get; set; } = new();
-
         public string PageAction { get; set; } = string.Empty;
+
+        [HtmlAttributeName(DictionaryAttributePrefix = "page-url-")]
+        public Dictionary<string, object> PageUrlValues { get; set; } = new Dictionary<string, object>();
 
         public bool PageClassesEnabled { get; set; } = false;
         public string PageClass { get; set; } = string.Empty;
@@ -40,7 +43,10 @@ namespace CinemaBooking.Infrastructure
                 for (int i = 1; i <= PageModel.TotalPages; i++)
                 {
                     TagBuilder tag = new TagBuilder("a");
-                    tag.Attributes["href"] = urlHelper.Action(PageAction, new { page = i });
+
+                    PageUrlValues["page"] = i;
+
+                    tag.Attributes["href"] = urlHelper.Action(PageAction, PageUrlValues);
 
                     if (PageClassesEnabled)
                     {

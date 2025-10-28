@@ -7,5 +7,7 @@ namespace CinemaBooking.Models.ViewModels
         public IEnumerable<MovieSession> MovieSessions { get; set; } = Enumerable.Empty<MovieSession>();
 
         public PagingInfo PagingInfo { get; set; } = new();
+
+        public string? CurrentGenre { get; set; }
     }
 }

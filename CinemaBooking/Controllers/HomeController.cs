@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using CinemaBooking.Models;
 using CinemaBooking.Models.ViewModels;
+using System.Linq;
 
 namespace CinemaBooking.Controllers
 {
     public class HomeController : Controller
     {
         private ICinemaRepository repository;
-
         public int PageSize = 3;
 
         public HomeController(ICinemaRepository repo)
@@ -15,11 +15,13 @@ namespace CinemaBooking.Controllers
             repository = repo;
         }
 
-        public IActionResult Index(int page = 1)
+        public IActionResult Index(string genre, int page = 1)
         {
             var viewModel = new SessionListViewModel
             {
                 MovieSessions = repository.MovieSessions
+                    .Where(p => genre == null || p.Genre == genre)
+                    .OrderBy(p => p.MovieSessionID)
                     .Skip((page - 1) * PageSize)
                     .Take(PageSize),
 
@@ -27,8 +29,13 @@ namespace CinemaBooking.Controllers
                 {
                     CurrentPage = page,
                     ItemsPerPage = PageSize,
-                    TotalItems = repository.MovieSessions.Count()
-                }
+
+                    TotalItems = (genre == null)
+                        ? repository.MovieSessions.Count()
+                        : repository.MovieSessions.Where(p => p.Genre == genre).Count()
+                },
+
+                CurrentGenre = genre
             };
 
             return View(viewModel);

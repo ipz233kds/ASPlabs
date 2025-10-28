@@ -1,0 +1,56 @@
+﻿@model BookingIndexViewModel
+
+@{
+    ViewData["Title"] = "Ваше Бронювання";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>К-сть</th>
+            <th>Фільм</th>
+            <th class="text-end">Ціна</th>
+            <th class="text-end">Разом</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var line in Model.Booking.Lines)
+        {
+            <tr>
+                <td class="text-center">@line.Quantity</td>
+                <td class="text-start">@line.MovieSession.Title</td>
+                <td class="text-end">@line.MovieSession.Price.ToString("c", System.Globalization.CultureInfo.GetCultureInfo("uk-UA"))</td>
+                <td class="text-end">
+                    @((line.Quantity * line.MovieSession.Price).ToString("c", System.Globalization.CultureInfo.GetCultureInfo("uk-UA")))
+                </td>
+                <td class="text-center">
+                    <form asp-action="RemoveFromBooking" asp-controller="Booking" method="post">
+                        <input type="hidden" name="MovieSessionID"
+                               value="@line.MovieSession.MovieSessionID" />
+                        <input type="hidden" name="returnUrl"
+                               value="@Model.ReturnUrl" />
+                        <button type="submit" class="btn btn-sm btn-danger">
+                            Видалити
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="3" class="text-end">Всього:</td>
+            <td class="text-end">
+                @Model.Booking.ComputeTotalValue().ToString("c", System.Globalization.CultureInfo.GetCultureInfo("uk-UA"))
+            </td>
+            <td></td>
+        </tr>
+    </tfoot>
+</table>
+
+<div class="text-center">
+    <a class="btn btn-primary" href="@Model.ReturnUrl">Продовжити перегляд</a>
+</div>

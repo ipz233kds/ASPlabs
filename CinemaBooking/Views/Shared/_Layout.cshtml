@@ -3,12 +3,14 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>@ViewData["Title"] - CinemaBooking</title>
-
     <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <link rel="stylesheet" href="~/css/style.css" />
 </head>
 <body class="d-flex flex-column min-vh-100">
+
     <header>
         <nav class="navbar navbar-expand-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
             <div class="container">
@@ -18,11 +20,20 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Головна</a>
                         </li>
                     </ul>
+
+                    <div class="navbar-nav">
+                        <a class="btn btn-sm btn-warning" asp-controller="Booking" asp-action="Index">
+                            <i class="bi bi-ticket-perforated"></i>
+                            Обрані
+                        </a>
+                    </div>
+
                 </div>
             </div>
         </nav>
@@ -30,7 +41,14 @@
 
     <div class="container content-wrapper">
         <main role="main" class="pb-3">
-            @RenderBody()
+            <div class="row">
+                <div class="col-md-3">
+                    <vc:navigation-menu />
+                </div>
+                <div class="col-md-9">
+                    @RenderBody()
+                </div>
+            </div>
         </main>
     </div>
 
@@ -42,4 +60,3 @@
 
 </body>
 </html>
-
