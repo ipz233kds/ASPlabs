@@ -1,0 +1,34 @@
+﻿@model MovieSession
+
+@{
+    ViewBag.Title = "Підтвердження Видалення Сеансу";
+}
+
+<h3 class="mb-3 text-danger">@ViewBag.Title</h3>
+
+@if (Model == null)
+{
+    <div class="alert alert-warning">Сеанс не знайдено.</div>
+    <div class="text-center">
+        <a asp-action="SessionIndex" class="btn btn-secondary">Назад до Списку Сеансів</a>
+    </div>
+}
+else
+{
+    <div class="alert alert-danger">
+        Ви впевнені, що хочете видалити сеанс для фільму
+        <strong>"@Model.Movie?.Title"</strong> на
+        <strong>@Model.SessionTime.ToString("F")</strong>? <br />
+        Цю дію неможливо буде скасувати.
+    </div>
+
+    <form asp-action="DeleteSession" method="post">
+        <input type="hidden" name="sessionId" value="@Model.MovieSessionID" />
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-danger">Так, Видалити</button>
+            <a asp-action="SessionIndex" class="btn btn-secondary">Ні, Скасувати</a>
+        </div>
+    </form>
+}
+

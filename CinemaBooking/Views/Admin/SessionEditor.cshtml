@@ -1,0 +1,45 @@
+﻿@model MovieSession
+
+@{
+    ViewBag.Title = Model?.MovieSessionID == 0 ? "Створити Новий Сеанс" : "Редагувати Сеанс";
+}
+
+<h3 class="mb-3">@ViewBag.Title</h3>
+
+<form asp-action="SaveSession" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <input type="hidden" asp-for="MovieSessionID" />
+
+    <div class="mb-3">
+        <label asp-for="MovieID" class="form-label">Фільм</label>
+        <select asp-for="MovieID" class="form-select"
+                asp-items="@(ViewBag.Movies as SelectList)">
+            <option value="">-- Оберіть фільм --</option>
+        </select>
+        <span asp-validation-for="MovieID" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Hall" class="form-label">Зал</label>
+        <input asp-for="Hall" class="form-control" />
+        <span asp-validation-for="Hall" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Price" class="form-label">Ціна</label>
+        <input asp-for="Price" class="form-control" type="number" step="0.01" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="SessionTime" class="form-label">Час сеансу</label>
+        <input asp-for="SessionTime" class="form-control" type="datetime-local" />
+        <span asp-validation-for="SessionTime" class="text-danger"></span>
+    </div>
+
+    <div class="text-center">
+        <button class="btn btn-primary" type="submit">Зберегти</button>
+        <a asp-action="SessionIndex" class="btn btn-secondary">Скасувати</a>
+    </div>
+</form>

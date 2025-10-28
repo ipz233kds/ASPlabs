@@ -21,7 +21,9 @@
         {
             <tr>
                 <td class="text-center">@line.Quantity</td>
-                <td class="text-start">@line.MovieSession.Title</td>
+
+                <td class="text-start">@line.MovieSession.Movie?.Title</td>
+
                 <td class="text-end">@line.MovieSession.Price.ToString("c", System.Globalization.CultureInfo.GetCultureInfo("uk-UA"))</td>
                 <td class="text-end">
                     @((line.Quantity * line.MovieSession.Price).ToString("c", System.Globalization.CultureInfo.GetCultureInfo("uk-UA")))

@@ -20,7 +20,7 @@ namespace CinemaBooking.Controllers
             var viewModel = new SessionListViewModel
             {
                 MovieSessions = repository.MovieSessions
-                    .Where(p => genre == null || p.Genre == genre)
+                    .Where(p => genre == null || (p.Movie != null && p.Movie.Genre == genre))
                     .OrderBy(p => p.MovieSessionID)
                     .Skip((page - 1) * PageSize)
                     .Take(PageSize),
@@ -32,7 +32,7 @@ namespace CinemaBooking.Controllers
 
                     TotalItems = (genre == null)
                         ? repository.MovieSessions.Count()
-                        : repository.MovieSessions.Where(p => p.Genre == genre).Count()
+                        : repository.MovieSessions.Where(p => p.Movie != null && p.Movie.Genre == genre).Count()
                 },
 
                 CurrentGenre = genre

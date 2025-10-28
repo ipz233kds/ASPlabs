@@ -1,0 +1,36 @@
+﻿@model Movie
+
+@{
+    ViewBag.Title = $"Деталі Фільму: {Model?.Title ?? "Не знайдено"}";
+}
+
+<h3 class="mb-3">@ViewBag.Title</h3>
+
+@if (Model == null)
+{
+    <div class="alert alert-warning">Фільм не знайдено.</div>
+}
+else
+{
+    <dl class="row">
+        <dt class="col-sm-3">ID</dt>
+        <dd class="col-sm-9">@Model.MovieID</dd>
+
+        <dt class="col-sm-3">Назва</dt>
+        <dd class="col-sm-9">@Model.Title</dd>
+
+        <dt class="col-sm-3">Опис</dt>
+        <dd class="col-sm-9">@Model.Description</dd>
+
+        <dt class="col-sm-3">Жанр</dt>
+        <dd class="col-sm-9">@Model.Genre</dd>
+    </dl>
+}
+
+<div class="text-center mt-4">
+    <a asp-action="Index" class="btn btn-secondary">Назад до Списку</a>
+    @if (Model != null)
+    {
+        <a asp-action="EditMovie" asp-route-movieId="@Model.MovieID" class="btn btn-warning">Редагувати</a>
+    }
+</div>

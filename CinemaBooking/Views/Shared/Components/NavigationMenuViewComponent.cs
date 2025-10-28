@@ -18,7 +18,7 @@ namespace CinemaBooking.Components
             ViewBag.SelectedGenre = RouteData?.Values["genre"];
 
             var genres = repository.MovieSessions
-                .Select(x => x.Genre)
+                .Select(x => x.Movie!.Genre)
                 .Distinct()
                 .OrderBy(x => x);
 

@@ -6,5 +6,6 @@ namespace CinemaBooking.Models
     {
         public CinemaDbContext(DbContextOptions<CinemaDbContext> options) : base(options) { }
         public DbSet<MovieSession> MovieSessions => Set<MovieSession>();
+        public DbSet<Movie> Movies => Set<Movie>();
     }
 }

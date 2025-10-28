@@ -1,0 +1,66 @@
+﻿@model IEnumerable<Movie>
+
+@{
+    ViewBag.Title = "Всі Фільми";
+}
+
+<div class="row mb-2">
+    <div class="col">
+        <h3>@ViewBag.Title</h3>
+    </div>
+    <div class="col text-end">
+        <a asp-action="CreateMovie" class="btn btn-primary">Створити Новий Фільм</a>
+        <a asp-action="SessionIndex" class="btn btn-secondary">Управління Сеансами</a>
+    </div>
+</div>
+
+@if (TempData["message"] != null)
+{
+    <div class="alert alert-success">@TempData["message"]</div>
+}
+
+<table class="table table-striped table-bordered table-sm">
+    <thead>
+        <tr>
+            <th class="text-end">ID</th>
+            <th>Назва</th>
+            <th>Жанр</th>
+            <th class="text-center">Дії</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr><td colspan="4" class="text-center">Немає фільмів</td></tr>
+        }
+        else
+        {
+            @foreach (Movie m in Model ?? Enumerable.Empty<Movie>())
+            {
+                <tr>
+                    <td class="text-end">@m.MovieID</td>
+                    <td>@m.Title</td>
+                    <td>@m.Genre</td>
+                    <td class="text-center">
+                        <form asp-action="DeleteMovie" method="post" style="display: inline;">
+                            <input type="hidden" name="MovieID" value="@m.MovieID" />
+                            <a asp-action="DeleteMovieConfirmation" asp-route-movieId="@m.MovieID"
+                               class="btn btn-danger btn-sm">
+                                Видалити
+                            </a>
+                        </form>
+                        <a asp-action="EditMovie" asp-route-movieId="@m.MovieID"
+                           class="btn btn-warning btn-sm">
+                            Редагувати
+                        </a>
+                        <a asp-action="MovieDetails" asp-route-movieId="@m.MovieID"
+                           class="btn btn-info btn-sm">
+                            Деталі
+                        </a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+

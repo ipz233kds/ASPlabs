@@ -1,0 +1,39 @@
+﻿@model MovieSession
+
+@{
+    ViewBag.Title = "Деталі Сеансу";
+}
+
+<h3 class="mb-3">@ViewBag.Title</h3>
+
+@if (Model == null)
+{
+    <div class="alert alert-warning">Сеанс не знайдено.</div>
+}
+else
+{
+    <dl class="row">
+        <dt class="col-sm-3">ID Сеансу</dt>
+        <dd class="col-sm-9">@Model.MovieSessionID</dd>
+
+        <dt class="col-sm-3">Фільм</dt>
+        <dd class="col-sm-9">@Model.Movie?.Title</dd>
+
+        <dt class="col-sm-3">Зал</dt>
+        <dd class="col-sm-9">@Model.Hall</dd>
+
+        <dt class="col-sm-3">Ціна</dt>
+        <dd class="col-sm-9">@Model.Price.ToString("c", System.Globalization.CultureInfo.GetCultureInfo("uk-UA"))</dd>
+
+        <dt class="col-sm-3">Час сеансу</dt>
+        <dd class="col-sm-9">@Model.SessionTime.ToString("F")</dd>
+    </dl>
+}
+
+<div class="text-center">
+    @if (Model != null)
+    {
+        <a asp-action="EditSession" asp-route-sessionId="@Model.MovieSessionID" class="btn btn-warning">Редагувати</a>
+    }
+    <a asp-action="SessionIndex" class="btn btn-secondary">Назад до Списку Сеансів</a>
+</div>

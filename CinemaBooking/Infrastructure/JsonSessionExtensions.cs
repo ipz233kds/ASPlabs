@@ -1,4 +1,6 @@
-﻿using System.Text.Json;
+﻿using Microsoft.AspNetCore.Http;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace CinemaBooking.Infrastructure
 {
@@ -6,14 +8,25 @@ namespace CinemaBooking.Infrastructure
     {
         public static void SetJson(this ISession session, string key, object value)
         {
-            session.SetString(key, JsonSerializer.Serialize(value));
+            var options = new JsonSerializerOptions
+            {
+                ReferenceHandler = ReferenceHandler.Preserve
+            };
+            session.SetString(key, JsonSerializer.Serialize(value, options));
         }
 
         public static T? GetJson<T>(this ISession session, string key)
         {
             var sessionData = session.GetString(key);
+
+            var options = new JsonSerializerOptions
+            {
+                ReferenceHandler = ReferenceHandler.Preserve
+            };
+
             return sessionData == null
-                ? default(T) : JsonSerializer.Deserialize<T>(sessionData);
+                ? default(T)
+                : JsonSerializer.Deserialize<T>(sessionData, options);
         }
     }
 }

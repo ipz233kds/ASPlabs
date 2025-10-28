@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Globalization;
+using System.Linq;
 
 namespace CinemaBooking.Models
 {
@@ -15,46 +16,77 @@ namespace CinemaBooking.Models
             {
                 context.Database.Migrate();
             }
-
-            if (!context.MovieSessions.Any())
+            if (!context.Movies.Any())
             {
+                var dune = new Movie
+                {
+                    Title = "Дюна: Частина друга",
+                    Description = "Пол Атрід об'єднується з Чані та Фременами, щоб помститися змовникам, які знищили його родину.",
+                    Genre = "Фантастика"
+                };
+
+                var joker = new Movie
+                {
+                    Title = "Джокер: Божевілля на двох",
+                    Description = "Артур Флек у психіатричній лікарні Аркхем зустрічає Гарлі Квінн.",
+                    Genre = "Трилер / Мюзикл"
+                };
+
+                var panda = new Movie
+                {
+                    Title = "Панда Кунг-Фу 4",
+                    Description = "Воїн Дракона По має знайти собі наступника, перш ніж стати Духовним лідером Долини Миру.",
+                    Genre = "Мультфільм"
+                };
+
+                var civilWar = new Movie
+                {
+                    Title = "Повстання Штатів",
+                    Description = "У найближчому майбутньому команда журналістів подорожує Сполученими Штатами під час громадянської війни.",
+                    Genre = "Бойовик"
+                };
+
+                var mavka = new Movie
+                {
+                    Title = "Мавка. Лісова пісня",
+                    Description = "Мавка, душа Лісу, стикається з неможливим вибором між коханням і обов'язком берегині.",
+                    Genre = "Мультфільм"
+                };
+
+                context.Movies.AddRange(dune, joker, panda, civilWar, mavka);
+
                 context.MovieSessions.AddRange(
                     new MovieSession
                     {
-                        Title = "Дюна: Частина друга",
-                        Genre = "Фантастика",
+                        Movie = dune,
                         Hall = "Зал 1 (IMAX)",
                         Price = 220,
                         SessionTime = DateTime.ParseExact("28.10.2025 18:00", "dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture)
                     },
                     new MovieSession
                     {
-                        Title = "Джокер: Божевілля на двох",
-                        Genre = "Трилер / Мюзикл",
+                        Movie = joker,
                         Hall = "Зал 2",
                         Price = 180,
                         SessionTime = DateTime.ParseExact("28.10.2025 19:30", "dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture)
                     },
                     new MovieSession
                     {
-                        Title = "Панда Кунг-Фу 4",
-                        Genre = "Мультфільм",
+                        Movie = panda,
                         Hall = "Зал 3 (Дитячий)",
                         Price = 150,
                         SessionTime = DateTime.ParseExact("28.10.2025 16:00", "dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture)
                     },
                     new MovieSession
                     {
-                        Title = "Повстання Штатів",
-                        Genre = "Бойовик",
+                        Movie = civilWar,
                         Hall = "Зал 1 (IMAX)",
                         Price = 210,
                         SessionTime = DateTime.ParseExact("28.10.2025 21:00", "dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture)
                     },
                     new MovieSession
                     {
-                        Title = "Мавка. Лісова пісня",
-                        Genre = "Мультфільм",
+                        Movie = mavka,
                         Hall = "Зал 3 (Дитячий)",
                         Price = 140,
                         SessionTime = DateTime.ParseExact("28.10.2025 14:00", "dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture)
@@ -65,3 +97,4 @@ namespace CinemaBooking.Models
         }
     }
 }
+
