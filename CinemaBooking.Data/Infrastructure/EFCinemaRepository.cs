@@ -1,7 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CinemaBooking.Data.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
-namespace CinemaBooking.Models
+namespace CinemaBooking.Data.Infrastructure
 {
     public class EFCinemaRepository : ICinemaRepository
     {

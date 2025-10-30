@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace CinemaBooking.Models
+namespace CinemaBooking.Data.Models
 {
     public class MovieSession
     {

@@ -23,18 +23,28 @@
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Головна</a>
                         </li>
-
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Admin" asp-action="Index">Адмін</a>
                         </li>
-
                     </ul>
 
                     <div class="navbar-nav">
-                        <a class="btn btn-sm btn-warning" asp-controller="Booking" asp-action="Index">
+                        <a class="btn btn-sm btn-warning me-2" asp-controller="Booking" asp-action="Index">
                             <i class="bi bi-ticket-perforated"></i>
                             Обрані
                         </a>
+
+                        @if (User.Identity?.IsAuthenticated ?? false)
+                        {
+                            <span class="navbar-text text-white me-2">Привіт, @User.Identity.Name!</span>
+                            <a class="btn btn-sm btn-outline-light me-2" asp-controller="Account" asp-action="Profile">Кабінет</a>
+                            <a class="btn btn-sm btn-outline-danger" asp-controller="Account" asp-action="Logout">Вийти</a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-sm btn-outline-light me-2" asp-controller="Account" asp-action="Login">Вхід</a>
+                            <a class="btn btn-sm btn-primary" asp-controller="Account" asp-action="Register">Реєстрація</a>
+                        }
                     </div>
 
                 </div>
@@ -49,6 +59,10 @@
                     <vc:navigation-menu />
                 </div>
                 <div class="col-md-9">
+                    @if (TempData["message"] != null)
+                    {
+                        <div class="alert alert-success">@TempData["message"]</div>
+                    }
                     @RenderBody()
                 </div>
             </div>
@@ -61,6 +75,7 @@
         </div>
     </footer>
 
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 

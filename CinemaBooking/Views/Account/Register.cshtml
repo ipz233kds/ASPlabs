@@ -1,0 +1,47 @@
+﻿@model RegisterModel
+
+@{
+    ViewBag.Title = "Реєстрація";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<form asp-action="Register" asp-controller="Account" method="post">
+    <!-- Приховане поле для ReturnUrl -->
+    <input type="hidden" asp-for="ReturnUrl" />
+
+    <div class="mb-3">
+        <label asp-for="UserName" class="form-label">Ім'я користувача</label>
+        <input asp-for="UserName" class="form-control" />
+        <span asp-validation-for="UserName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label">Email</label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Password" class="form-label">Пароль</label>
+        <input asp-for="Password" class="form-control" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+        <small class="form-text text-muted">Мінімум 8 символів, великі та малі літери, цифри.</small>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ConfirmPassword" class="form-label">Підтвердіть пароль</label>
+        <input asp-for="ConfirmPassword" class="form-control" />
+        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+    </div>
+
+    <div class="d-grid gap-2">
+        <button class="btn btn-primary" type="submit">Зареєструватися</button>
+    </div>
+</form>
+
+<div class="text-center mt-3">
+    <p>Вже маєте акаунт? <a asp-action="Login" asp-controller="Account" asp-route-returnUrl="@Model.ReturnUrl">Увійти</a></p>
+</div>

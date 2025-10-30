@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using CinemaBooking.Models;
+using CinemaBooking.Data.Models;
+using CinemaBooking.Data.Infrastructure;
 using System.Linq;
 
 namespace CinemaBooking.Components

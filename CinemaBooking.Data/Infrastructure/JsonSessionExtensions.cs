@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace CinemaBooking.Infrastructure
+namespace CinemaBooking.Data.Infrastructure
 {
     public static class JsonSessionExtensions
     {

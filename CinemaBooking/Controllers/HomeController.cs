@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using CinemaBooking.Models;
+using CinemaBooking.Data.Models;
+using CinemaBooking.Data.Infrastructure;
 using CinemaBooking.Models.ViewModels;
 using System.Linq;
 
@@ -42,3 +43,4 @@ namespace CinemaBooking.Controllers
         }
     }
 }
+

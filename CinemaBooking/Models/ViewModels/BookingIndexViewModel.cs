@@ -1,4 +1,5 @@
-﻿namespace CinemaBooking.Models.ViewModels
+﻿using CinemaBooking.Data.Models;
+namespace CinemaBooking.Models.ViewModels
 {
     public class BookingIndexViewModel
     {

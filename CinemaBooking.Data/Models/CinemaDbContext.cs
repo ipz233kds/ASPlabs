@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace CinemaBooking.Models
+namespace CinemaBooking.Data.Models
 {
     public class CinemaDbContext : DbContext
     {

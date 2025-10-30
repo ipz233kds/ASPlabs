@@ -1,7 +1,9 @@
 ﻿using System.Text.Json.Serialization;
-using CinemaBooking.Infrastructure;
+using CinemaBooking.Data.Infrastructure;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace CinemaBooking.Models
+namespace CinemaBooking.Data.Models
 {
     public class SessionBooking : Booking
     {

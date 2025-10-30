@@ -5,18 +5,30 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CinemaBooking", "CinemaBooking\CinemaBooking.csproj", "{7A7F02E3-673B-44DB-9489-E36330219D2E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CinemaBooking.Data", "CinemaBooking.Data\CinemaBooking.Data.csproj", "{6A41F66D-B82B-4721-8F0B-7CE84916313A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CinemaBooking.API", "CinemaBooking.API\CinemaBooking.API.csproj", "{17724644-F373-4581-BB6C-F5CC0AEECA7C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{7A7F02E3-673B-44DB-9489-E36330219D2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7A7F02E3-673B-44DB-9489-E36330219D2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A7F02E3-673B-44DB-9489-E36330219D2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A7F02E3-673B-44DB-9489-E36330219D2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A41F66D-B82B-4721-8F0B-7CE84916313A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A41F66D-B82B-4721-8F0B-7CE84916313A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A41F66D-B82B-4721-8F0B-7CE84916313A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A41F66D-B82B-4721-8F0B-7CE84916313A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17724644-F373-4581-BB6C-F5CC0AEECA7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17724644-F373-4581-BB6C-F5CC0AEECA7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17724644-F373-4581-BB6C-F5CC0AEECA7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17724644-F373-4581-BB6C-F5CC0AEECA7C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

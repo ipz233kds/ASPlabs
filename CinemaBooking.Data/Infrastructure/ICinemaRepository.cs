@@ -1,6 +1,7 @@
-﻿using System.Linq;
+﻿using CinemaBooking.Data.Models;
+using System.Linq;
 
-namespace CinemaBooking.Models
+namespace CinemaBooking.Data.Infrastructure
 {
     public interface ICinemaRepository
     {
