@@ -1,0 +1,108 @@
+﻿@page "/movies"
+@using CinemaBooking.Shared.DTOs
+@inject IHttpClientFactory HttpClientFactory
+@inject NavigationManager Navigation
+@using CinemaBooking.Web.Services
+@inject AuthService AuthService
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Фільми</h3>
+    <a href="/movies/add" class="btn btn-primary">Додати Фільм</a>
+</div>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+
+@if (movies == null)
+{
+    <p><em>Завантаження...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Назва</th>
+                <th>Жанр</th>
+                <th>Опис</th>
+                <th>Дії</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var movie in movies)
+            {
+                <tr>
+                    <td>@movie.Title</td>
+                    <td>@movie.Genre</td>
+                    <td>@movie.Description</td>
+                    <td>
+                        <a href="@($"movies/edit/{movie.MovieID}")" class="btn btn-sm btn-secondary">
+                            Редагувати
+                        </a>
+
+                        <button class="btn btn-sm btn-danger" @onclick="() => DeleteMovie(movie.MovieID)">
+                            Видалити
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private MovieDto[]? movies;
+    private HttpClient? Http;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Http = HttpClientFactory.CreateClient("MyApi");
+        await LoadMovies();
+    }
+
+    private async Task LoadMovies()
+    {
+        if (Http == null) return;
+        try
+        {
+            movies = await Http.GetFromJsonAsync<MovieDto[]>("api/movies");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Помилка завантаження фільмів: {ex.Message}";
+        }
+    }
+
+    private async Task DeleteMovie(long movieId)
+    {
+        if (Http == null) return;
+        errorMessage = null;
+
+        try
+        {
+            AuthService.SetAuthHeader(Http);
+
+            var response = await Http.DeleteAsync($"api/movies/{movieId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                await LoadMovies();
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                errorMessage = "Помилка 401: Ви не авторизовані для цієї дії.";
+            }
+            else
+            {
+                errorMessage = $"Помилка видалення: {response.StatusCode}";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Виникла помилка: {ex.Message}";
+        }
+    }
+}

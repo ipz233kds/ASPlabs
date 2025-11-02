@@ -1,0 +1,100 @@
+﻿@page "/movies/edit/{MovieId:long}"
+@using CinemaBooking.Shared.DTOs
+@inject IHttpClientFactory HttpClientFactory
+@inject NavigationManager Navigation
+@using CinemaBooking.Web.Services
+@inject AuthService AuthService
+<h3>Редагувати фільм</h3>
+
+@if (movieModel == null)
+{
+    <p>Завантаження даних фільму...</p>
+}
+else
+{
+    <EditForm Model="@movieModel" OnValidSubmit="@HandleValidSubmit">
+        <DataAnnotationsValidator />
+
+        <div class="mb-3">
+            <label class="form-label">Назва:</label>
+            <InputText class="form-control" @bind-Value="movieModel.Title" />
+            <ValidationMessage For="@(() => movieModel.Title)" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Жанр:</label>
+            <InputText class="form-control" @bind-Value="movieModel.Genre" />
+            <ValidationMessage For="@(() => movieModel.Genre)" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Опис:</label>
+            <InputTextArea class="form-control" @bind-Value="movieModel.Description" />
+            <ValidationMessage For="@(() => movieModel.Description)" />
+        </div>
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="alert alert-danger">@errorMessage</div>
+        }
+
+        <button type="submit" class="btn btn-primary">Оновити</button>
+        <a href="/movies" class="btn btn-link">Повернутися до списку</a>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public long MovieId { get; set; }
+
+    private CreateUpdateMovieDto? movieModel;
+    private HttpClient? Http;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Http = HttpClientFactory.CreateClient("MyApi");
+
+        var movieDto = await Http.GetFromJsonAsync<MovieDto>($"api/movies/{MovieId}");
+
+        if (movieDto != null)
+        {
+            movieModel = new CreateUpdateMovieDto
+                {
+                    Title = movieDto.Title,
+                    Description = movieDto.Description,
+                    Genre = movieDto.Genre
+                };
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        if (Http == null || movieModel == null) return;
+        errorMessage = null;
+
+        try
+        {
+            AuthService.SetAuthHeader(Http);
+
+            var response = await Http.PutAsJsonAsync($"api/movies/{MovieId}", movieModel);
+
+            if (response.IsSuccessStatusCode)
+            {
+                Navigation.NavigateTo("/movies");
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                errorMessage = "Помилка 401: Ви не авторизовані. Можливо, потрібно увійти.";
+            }
+            else
+            {
+                errorMessage = $"Помилка оновлення: {response.StatusCode}";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Виникла помилка: {ex.Message}";
+        }
+    }
+}

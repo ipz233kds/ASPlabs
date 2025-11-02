@@ -1,4 +1,4 @@
-﻿namespace CinemaBooking.API.DTOs
+﻿namespace CinemaBooking.Shared.DTOs
 {
     public class MovieDto
     {

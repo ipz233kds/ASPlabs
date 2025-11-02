@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CinemaBooking.API.DTOs
+namespace CinemaBooking.Shared.DTOs
 {
     public class LoginDto
     {

@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CinemaBooking.Data", "Cinem
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CinemaBooking.API", "CinemaBooking.API\CinemaBooking.API.csproj", "{17724644-F373-4581-BB6C-F5CC0AEECA7C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CinemaBooking.Shared", "CinemaBooking.Shared\CinemaBooking.Shared.csproj", "{3015D68D-596A-44EC-AFE7-833C1C94AE86}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CinemaBooking.Web", "CinemaBooking.Web\CinemaBooking.Web.csproj", "{FB441B29-CA19-4949-B206-743EE145C69D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{17724644-F373-4581-BB6C-F5CC0AEECA7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17724644-F373-4581-BB6C-F5CC0AEECA7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17724644-F373-4581-BB6C-F5CC0AEECA7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3015D68D-596A-44EC-AFE7-833C1C94AE86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3015D68D-596A-44EC-AFE7-833C1C94AE86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3015D68D-596A-44EC-AFE7-833C1C94AE86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3015D68D-596A-44EC-AFE7-833C1C94AE86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB441B29-CA19-4949-B206-743EE145C69D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB441B29-CA19-4949-B206-743EE145C69D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB441B29-CA19-4949-B206-743EE145C69D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB441B29-CA19-4949-B206-743EE145C69D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

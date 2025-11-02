@@ -1,4 +1,4 @@
-﻿using CinemaBooking.API.DTOs;
+﻿using CinemaBooking.Shared.DTOs;
 using CinemaBooking.Data.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;

@@ -1,0 +1,98 @@
+﻿@page "/sessions"
+@using CinemaBooking.Shared.DTOs
+@using CinemaBooking.Web.Services
+@inject IHttpClientFactory HttpClientFactory
+@inject NavigationManager Navigation
+@inject AuthService AuthService
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Сеанси</h3>
+    <a href="/sessions/add" class="btn btn-primary">Додати Сеанс</a>
+</div>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+
+@if (sessions == null)
+{
+    <p><em>Завантаження сеансів...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Фільм</th>
+                <th>Зал</th>
+                <th>Час</th>
+                <th>Ціна</th>
+                <th>Дії</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var session in sessions)
+            {
+                <tr>
+                    <td>@session.MovieTitle</td>
+                    <td>@session.Hall</td>
+                    <td>@session.SessionTime.ToString("g")</td>
+                    <td>@session.Price.ToString("C")</td>
+                    <td>
+                        <a href="@($"sessions/edit/{session.MovieSessionID}")" class="btn btn-sm btn-secondary">
+                            Редагувати
+                        </a>
+                        <button class="btn btn-sm btn-danger" @onclick="() => DeleteSession(session.MovieSessionID)">
+                            Видалити
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private MovieSessionDto[]? sessions;
+    private HttpClient? Http;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Http = HttpClientFactory.CreateClient("MyApi");
+        await LoadSessions();
+    }
+
+    private async Task LoadSessions()
+    {
+        if (Http == null) return;
+        sessions = await Http.GetFromJsonAsync<MovieSessionDto[]>("api/sessions");
+    }
+
+    private async Task DeleteSession(long sessionId)
+    {
+        if (Http == null) return;
+        errorMessage = null;
+
+        try
+        {
+            AuthService.SetAuthHeader(Http);
+
+            var response = await Http.DeleteAsync($"api/sessions/{sessionId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                await LoadSessions();
+            }
+            else
+            {
+                errorMessage = "Помилка 401: Ви не авторизовані.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Виникла помилка: {ex.Message}";
+        }
+    }
+}
