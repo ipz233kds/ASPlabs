@@ -3,6 +3,7 @@ using CinemaBooking.Data.Models;
 using CinemaBooking.Data.Infrastructure;
 using CinemaBooking.Models.ViewModels;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace CinemaBooking.Controllers
 {
@@ -21,6 +22,8 @@ namespace CinemaBooking.Controllers
             var viewModel = new SessionListViewModel
             {
                 MovieSessions = repository.MovieSessions
+                    .Include(s => s.Movie)
+                    .Include(s => s.Hall)
                     .Where(p => genre == null || (p.Movie != null && p.Movie.Genre == genre))
                     .OrderBy(p => p.MovieSessionID)
                     .Skip((page - 1) * PageSize)
@@ -43,4 +46,3 @@ namespace CinemaBooking.Controllers
         }
     }
 }
-

@@ -7,8 +7,9 @@ namespace CinemaBooking.Data.Models
     {
         public long MovieSessionID { get; set; }
 
-        [Required(ErrorMessage = "Будь ласка, введіть назву залу")]
-        public string Hall { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Будь ласка, вкажіть зал")]
+        public long HallID { get; set; }
+        public Hall? Hall { get; set; }
 
         [Required(ErrorMessage = "Будь ласка, введіть ціну")]
         [Column(TypeName = "decimal(8, 2)")]
@@ -20,7 +21,8 @@ namespace CinemaBooking.Data.Models
 
         [Required(ErrorMessage = "Будь ласка, вкажіть фільм")]
         public long? MovieID { get; set; }
-
         public Movie? Movie { get; set; }
+
+        public ICollection<SeatStatus> SeatStatuses { get; set; } = new List<SeatStatus>();
     }
 }

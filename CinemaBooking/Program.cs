@@ -1,11 +1,13 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using CinemaBooking.Data.Models;
 using CinemaBooking.Data.Infrastructure;
 using Microsoft.AspNetCore.Identity;
+using CinemaBooking.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddSignalR(); 
 
 builder.Services.AddDbContext<CinemaDbContext>(opts => {
     opts.UseSqlServer(
@@ -47,6 +49,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapDefaultControllerRoute();
+
+app.MapHub<BookingHub>("/bookingHub");
 
 await IdentitySeedData.EnsurePopulatedAsync(app.Services);
 SeedData.EnsurePopulated(app.Services);

@@ -7,7 +7,7 @@
 
 <h3>Редагувати сеанс</h3>
 
-@if (sessionModel == null || movies == null)
+@if (sessionModel == null || movies == null || halls == null) // ⬅️ Оновлено
 {
     <p><em>Завантаження даних...</em></p>
 }
@@ -18,7 +18,7 @@ else
 
         <div class="mb-3">
             <label class="form-label">Фільм:</label>
-            <InputSelect class="form-control" @bind-Value="sessionModel.MovieID">
+            <InputSelect class="form-select" @bind-Value="sessionModel.MovieID">
                 <option value="0">-- Виберіть фільм --</option>
                 @foreach (var movie in movies)
                 {
@@ -30,8 +30,14 @@ else
 
         <div class="mb-3">
             <label class="form-label">Зал:</label>
-            <InputText class="form-control" @bind-Value="sessionModel.Hall" />
-            <ValidationMessage For="@(() => sessionModel.Hall)" />
+            <InputSelect class="form-select" @bind-Value="sessionModel.HallID">
+                <option value="0">-- Виберіть зал --</option>
+                @foreach (var hall in halls)
+                {
+                    <option value="@hall.HallID">@hall.Name</option>
+                }
+            </InputSelect>
+            <ValidationMessage For="@(() => sessionModel.HallID)" />
         </div>
 
         <div class="mb-3">
@@ -42,7 +48,7 @@ else
 
         <div class="mb-3">
             <label class="form-label">Час сеансу:</label>
-            <InputDate class="form-control" @bind-Value="sessionModel.SessionTime" />
+            <InputDate type="InputDateType.DateTimeLocal" class="form-control" @bind-Value="sessionModel.SessionTime" />
             <ValidationMessage For="@(() => sessionModel.SessionTime)" />
         </div>
 
@@ -59,26 +65,42 @@ else
 @code {
     [Parameter]
     public long SessionId { get; set; }
+
     private CreateUpdateSessionDto? sessionModel;
     private MovieDto[]? movies;
+    private HallDto[]? halls;
+
     private HttpClient? Http;
     private string? errorMessage;
 
+    // ⛔️ ВИДАЛІТЬ ЦЕЙ РЯДОК (АБО ПЕРЕКОНАЙТЕСЬ, ЩО ЙОГО НЕМАЄ)
+    // [Inject]
+    // private IHttpClientFactory HttpClientFactory { get; set; } = default!;
+
     protected override async Task OnInitializedAsync()
     {
+        // 'HttpClientFactory' (з верхнього @inject) буде доступний тут
         Http = HttpClientFactory.CreateClient("MyApi");
-        movies = await Http.GetFromJsonAsync<MovieDto[]>("api/movies");
-        var sessionDto = await Http.GetFromJsonAsync<MovieSessionDto>($"api/sessions/{SessionId}");
-
-        if (sessionDto != null)
+        try
         {
-            sessionModel = new CreateUpdateSessionDto
-                {
-                    Hall = sessionDto.Hall,
-                    Price = sessionDto.Price,
-                    SessionTime = sessionDto.SessionTime,
-                    MovieID = sessionDto.MovieID ?? 0
-                };
+            movies = await Http.GetFromJsonAsync<MovieDto[]>("api/movies");
+            halls = await Http.GetFromJsonAsync<HallDto[]>("api/halls");
+            var sessionDto = await Http.GetFromJsonAsync<MovieSessionDto>($"api/sessions/{SessionId}");
+
+            if (sessionDto != null && halls != null)
+            {
+                sessionModel = new CreateUpdateSessionDto
+                    {
+                        HallID = halls.FirstOrDefault(h => h.Name == sessionDto.Hall)?.HallID ?? 0,
+                        Price = sessionDto.Price,
+                        SessionTime = sessionDto.SessionTime,
+                        MovieID = sessionDto.MovieID ?? 0
+                    };
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Не вдалося завантажити дані: {ex.Message}";
         }
     }
 
@@ -90,7 +112,6 @@ else
         try
         {
             AuthService.SetAuthHeader(Http);
-
             var response = await Http.PutAsJsonAsync($"api/sessions/{SessionId}", sessionModel);
 
             if (response.IsSuccessStatusCode)
@@ -99,7 +120,7 @@ else
             }
             else
             {
-                errorMessage = "Помилка 401: Ви не авторизовані.";
+                errorMessage = $"Помилка оновлення: {await response.Content.ReadAsStringAsync()}";
             }
         }
         catch (Exception ex)

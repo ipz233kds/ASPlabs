@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "Бронювання Підтверджено";
+}
+
+<div class="container text-center">
+    <h1 class="display-4 text-success">Дякуємо!</h1>
+
+    @if (TempData["message"] != null)
+    {
+        <div class="alert alert-success h4">@TempData["message"]</div>
+    }
+
+    <p class="lead mt-4">
+        Ваші квитки успішно заброньовані.
+    </p>
+    <a asp-controller="Home" asp-action="Index" class="btn btn-primary btn-lg">
+        Повернутися на Головну
+    </a>
+</div>

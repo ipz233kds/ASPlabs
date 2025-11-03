@@ -1,0 +1,171 @@
+﻿@model SeatSelectionViewModel
+@{
+    ViewData["Title"] = "Оберіть місця";
+
+    var pricePerSeatJs = Model.Session?.Price.ToString("F2", System.Globalization.CultureInfo.InvariantCulture) ?? "0";
+    var gridStyleVariable = $"--grid-columns: 30px repeat({Model.MaxSeatNumber}, 30px);";
+}
+
+<div class="container seat-selection-container"
+     style="@gridStyleVariable"
+     data-price-per-seat="@pricePerSeatJs">
+
+    <h2>@Model.Session?.Movie?.Title</h2>
+    <h4>@Model.Session?.Hall?.Name - @Model.Session?.SessionTime.ToString("g")</h4>
+
+    <div class="screen">ЕКРАН</div>
+
+    <div class="seat-grid">
+        @for (int r = 1; r <= Model.MaxRow; r++)
+        {
+            <div class="seat-row-label">@r</div>
+            @for (int s = 1; s <= Model.MaxSeatNumber; s++)
+            {
+                var seatStatus = Model.SeatStatuses?.FirstOrDefault(ss => ss.Seat!.Row == r && ss.Seat!.SeatNumber == s);
+                if (seatStatus != null)
+                {
+                    string cssClass = "seat";
+                    bool isAvailable = false;
+                    switch (seatStatus.Status)
+                    {
+                        case SeatState.Available: cssClass += " seat-available"; isAvailable = true; break;
+                        case SeatState.Sold: cssClass += " seat-sold"; break;
+                        case SeatState.Locked: cssClass += " seat-locked"; break;
+                    }
+                    <div class="@cssClass"
+                         data-seat-status-id="@seatStatus.SeatStatusID"
+                         data-is-available="@isAvailable.ToString()">
+                        @s
+                    </div>
+                }
+                else
+                {
+                    <div class="seat seat-sold">X</div>
+                }
+            }
+        }
+    </div>
+
+    <div class="seat-legend">
+        <div><div class="seat seat-available"></div> Доступно</div>
+        <div><div class="seat seat-selected"></div> Обрано</div>
+        <div><div class="seat seat-sold"></div> Продано</div>
+        <div><div class="seat seat-locked"></div> Заблоковано</div>
+    </div>
+    <hr />
+
+    <div class="row w-100">
+        <div class="col-md-6 offset-md-3">
+            <h3>Ваше замовлення:</h3>
+            <h4>Кількість квитків: <span id="seat-count" class="text-primary">0</span></h4>
+            <h4>До сплати: <span id="total-price" class="text-success">0.00 грн</span></h4>
+
+            <form asp-controller="Booking" asp-action="ConfirmSelection" method="post">
+                <input type="hidden" id="selectedSeatsInput" name="selectedSeatStatusIds" />
+                <input type="hidden" name="movieSessionID" value="@Model.Session?.MovieSessionID" />
+                <button type="submit" id="confirm-button" class="btn btn-primary btn-lg w-100" disabled>
+                    Підтвердити бронювання
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/signalr/signalr.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+
+            const pricePerSeat = parseFloat($('.seat-selection-container').data('price-per-seat'));
+            let selectedSeatIds = [];
+            const hiddenInput = $("#selectedSeatsInput");
+            const totalPriceDisplay = $("#total-price");
+            const seatCountDisplay = $("#seat-count");
+            const confirmButton = $("#confirm-button");
+
+            const connection = new signalR.HubConnectionBuilder()
+                .withUrl("/bookingHub")
+                .configureLogging(signalR.LogLevel.Information)
+                .build();
+
+            function updateSeatUI(seatId, newStatus) {
+                const seatElement = $(`.seat[data-seat-status-id="${seatId}"]`);
+                if (!seatElement.length) return;
+
+                seatElement.removeClass('seat-available seat-sold seat-locked seat-selected');
+
+                switch (newStatus) {
+                    case 'available':
+                        seatElement.addClass('seat-available');
+                        seatElement.data('is-available', 'True');
+                        break;
+                    case 'locked':
+                        seatElement.addClass('seat-locked');
+                        seatElement.data('is-available', 'False');
+                        break;
+                    case 'sold':
+                        seatElement.addClass('seat-sold');
+                        seatElement.data('is-available', 'False');
+                        break;
+                }
+            }
+
+            connection.on("UpdateSeatToLocked", (seatStatusId) => {
+                console.log(`SignalR: Місце ${seatStatusId} було заблоковано іншим користувачем.`);
+                updateSeatUI(seatStatusId, 'locked');
+            });
+
+            connection.on("UpdateSeatToAvailable", (seatStatusId) => {
+                console.log(`SignalR: Місце ${seatStatusId} було розблоковано.`);
+                updateSeatUI(seatStatusId, 'available');
+            });
+
+            connection.on("UpdateSeatToSold", (seatStatusId) => {
+                console.log(`SignalR: Місце ${seatStatusId} було продано.`);
+                updateSeatUI(seatStatusId, 'sold');
+            });
+
+            async function startSignalR() {
+                try {
+                    await connection.start();
+                    console.log("SignalR Connected.");
+                } catch (err) {
+                    console.error("SignalR Connection Failed: ", err);
+                    setTimeout(startSignalR, 5000);
+                }
+            }
+            startSignalR();
+
+
+            $('.seat-available').click(function() {
+
+                let seatId = $(this).data('seat-status-id');
+
+                if ($(this).hasClass('seat-selected')) {
+                    $(this).toggleClass('seat-selected');
+                    selectedSeatIds = selectedSeatIds.filter(id => id !== seatId);
+
+                    connection.invoke("UnlockSeat", seatId).catch(err => console.error(err));
+
+                } else {
+                    $(this).toggleClass('seat-selected');
+                    selectedSeatIds.push(seatId);
+
+                    connection.invoke("LockSeat", seatId).catch(err => console.error(err));
+                }
+
+                updateTotals();
+            });
+
+            function updateTotals() {
+                let count = selectedSeatIds.length;
+                let total = count * pricePerSeat;
+                seatCountDisplay.text(count);
+                totalPriceDisplay.text(total.toFixed(2) + " грн");
+                hiddenInput.val(selectedSeatIds.join(','));
+                confirmButton.prop('disabled', count === 0);
+            }
+        });
+    </script>
+}

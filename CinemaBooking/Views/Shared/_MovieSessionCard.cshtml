@@ -4,14 +4,11 @@
     <div class="card h-100 shadow-sm">
         <div class="card-body">
 
-           
             <h5 class="card-title text-primary">@Model.Movie?.Title</h5>
 
             <p class="card-text">
-
                 <strong>Жанр:</strong> @Model.Movie?.Genre <br />
-
-                <strong>Зал:</strong> @Model.Hall
+                <strong>Зал:</strong> @Model.Hall?.Name
             </p>
             <p class="card-text">
                 <strong>Час:</strong> @Model.SessionTime.ToString("g")
@@ -22,16 +19,12 @@
                 @Model.Price.ToString("c", System.Globalization.CultureInfo.GetCultureInfo("uk-UA"))
             </h5>
 
-            <form asp-action="AddToBooking" asp-controller="Booking" method="post">
-                <input type="hidden" name="movieSessionID" value="@Model.MovieSessionID" />
-
-                <input type="hidden" name="returnUrl"
-                       value="@(ViewContext.HttpContext.Request.Path + ViewContext.HttpContext.Request.QueryString)" />
-
-                <button type="submit" class="btn btn-warning btn-sm pull-right">
-                    Обрати
-                </button>
-            </form>
+            <a asp-controller="Booking"
+               asp-action="SelectSeats"
+               asp-route-movieSessionID="@Model.MovieSessionID"
+               class="btn btn-warning btn-sm pull-right">
+                Обрати
+            </a>
 
         </div>
     </div>
